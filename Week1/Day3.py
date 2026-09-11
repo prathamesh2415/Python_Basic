@@ -1,3 +1,6 @@
+import re
+
+
 #Welcome Message
 print("="*100)
 print("Welcome to LinkNest Basic Bookmark Manager")
@@ -19,18 +22,64 @@ def addBookmark(count_val,bookmarks_val):
         count=count_val
         bookmarks=bookmarks_val
         title = input("Enter the title of the bookmark: ")
+        if not title:
+            print(f"Error : The field {"\033[31m"}Title{"\033[0m"} is empty!!")   
+        
+        while title == '':    
+            title = input("Enter the title of the bookmark: ")
+        
         url = input("Enter the URL of the bookmark: ")
+        if not url:
+            print(f"Error : The field {"\033[31m"}Url{"\033[0m"} is empty!!")
+        
+        while url == '':
+            url = input("Enter the URL of the bookmark: ")
+            
+        
         category = input("Enter the category of the bookmark: ")
+        if not category:
+            print(f"Error : The field {"\033[31m"}Category{"\033[0m"} is empty!!")
+        
+        while category=='':
+            category = input("Enter the category of the bookmark: ") 
+        
+        isValid = urlValidation(url)
+        while isValid == False:
+             url = input("Enter the URL of the bookmark: ")
+             isvalid =urlValidation(url)
+             if isvalid == True:
+                  break
         bookmark = {
             "_id": count,
             "title": title,
             "url": url,
             "Category": category
             }
+        #isValid=validation(bookmark)
+        #if isValid == False:
+        #    exit()
         bookmarks.append(bookmark)
         print("Bookmark added successfully!")
-        
+'''        
+def validation(bookmark):
+    missing = [name for name , value in bookmark.items() if not value]
+    if missing:
+         print(f"The following fields are empty :{', '.join(missing)}")
+         return False
+    else:
+         return True 
+'''
+def urlValidation(url):
+    regex_pattern = "^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-]+)+(\/[a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]*)?$"
+    if re.match(regex_pattern,url):
+          print(f"valid Url")
+          valdation = True
+    else:
+          print(f"Invalid Url")
+          valdation = False
     
+    return valdation
+
 def viewBookmark():
     if not bookmarks:
         print("Bookmark is currently empty. Add Bookmark and try again")
@@ -82,6 +131,5 @@ while user_input !='5':
          deleteBookmark()
     elif user_input == "5":
         print("Exiting the application. Goodbye!")
-
     else:
         print("Invalid option. Please try again.")
